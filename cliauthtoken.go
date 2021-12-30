@@ -13,7 +13,7 @@ import (
   "text/template"
 
 	"github.com/skratchdot/open-golang/open"
-  "github.com/manifoldco/promptui"
+  "github.com/AlecAivazis/survey/v2"
   log "github.com/sirupsen/logrus"
 
 )
@@ -109,14 +109,11 @@ func (clia *CLIAuthToken) RequestTokenPasteable() string {
     clia.Log.Fatalf("Unexpected parsing error - %v", err)
   }
 
-  prompt := promptui.Prompt{
-		Label: PromptPleaseOpen,
-	}
-
-	session, err = prompt.Run()
-  if err != nil {
-    clia.Log.Fatalf("Can't run prompt %v", err)
+  session = ""
+  prompt := &survey.Multiline{
+      Message: PromptPasteToken,
   }
+  survey.AskOne(prompt, &session)
 
   return session
 }
@@ -180,7 +177,7 @@ func (clia *CLIAuthToken) buildURL(listener net.Listener) string {
 
   // set parameter
   query := u.Query()
-  query.Set(clia.CallbackQueryParameter, clia.AuthRequestCallbackParameterValueFunc(listener))
+  query.Set(clia.AuthRequestCallbackParameter, clia.AuthRequestCallbackParameterValueFunc(listener))
   u.RawQuery = query.Encode()
 
   return u.String()
@@ -213,7 +210,8 @@ func (clia *CLIAuthToken) httpServer(sessSignal chan string, listener net.Listen
 
   go func() {
 		if err := srv.Serve(listener); err != nil {
-			clia.Log.Fatalf("Error during Serve(): %v", err)
+      // not really important
+			clia.Log.Debugf("Error during Serve(): %v", err)
 		}
 	}()
 
