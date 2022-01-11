@@ -91,6 +91,7 @@ func NewCLIAuthToken(authRequestURL string) (clia *CLIAuthToken) {
   clia.ListenAddr = "127.0.0.1"
   clia.AuthRequestCopyParameter = AuthRequestCopyParameter
   clia.AuthRequestCopyParameterValue = AuthRequestCopyParameterValue
+  clia.AuthRequestCallbackParameterValueFunc = DefaultAuthRequestCallbackParameterValueFunc
 
   //set defaults
   clia.TokenTimeout = 5 * time.Minute
