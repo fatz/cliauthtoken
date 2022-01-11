@@ -174,6 +174,7 @@ func (clia *CLIAuthToken) buildURL(listener net.Listener) string {
   u, err := url.Parse(clia.AuthRequestURL)
   if err != nil {
     clia.Log.Fatalf("Cannot parse url %s - %v", clia.AuthRequestURL, err)
+    return ""
   }
 
   // set parameter
